@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/home4"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_network_info"
+            android:icon="@drawable/wifi"
+            android:title="Network Info" />
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@drawable/world_map_4"
+            android:title="Info Map" />
+        <item
+            android:id="@+id/nav_tests"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Test Network" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share my localization" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/about1"
+                android:title="About" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,126 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".HomeFragment"
+    android:weightSum="1"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="10dp">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nothing1"
+        android:text=""
+        android:textSize="12sp"/>
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="145dp">
+
+        <ImageView
+            android:layout_width="166dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/bad_quality"
+            android:id="@+id/bad_quality_audio"
+            android:clickable="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+
+        <ImageView
+            android:layout_width="191dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/drop_call"
+            android:id="@+id/dropped_call"
+            android:clickable="true"
+            android:layout_gravity="center" />
+
+    </GridLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nothing2"
+        android:text=""
+        android:textSize="12sp"/>
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="145dp">
+
+        <ImageView
+            android:layout_width="175dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/cannot_call"
+            android:id="@+id/cannot_call"
+            android:clickable="true"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:layout_width="191dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/no_data"
+            android:id="@+id/no_data"
+            android:clickable="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+
+    </GridLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nothing3"
+        android:text=""
+        android:textSize="12sp"/>
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="145dp">
+
+        <ImageView
+            android:layout_width="174dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/no_coverage"
+            android:id="@+id/no_coverage"
+            android:clickable="true"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:layout_width="191dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/slow_data"
+            android:id="@+id/slow_data"
+            android:clickable="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+
+    </GridLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nothing4"
+        android:text=""
+        android:textSize="8sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/problem"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:layout_below="@+id/nothing4"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorBlack"
+        android:text="Please indicate the problem!"
+        android:textSize="24sp"
+        android:gravity="bottom" />
+
+</LinearLayout>
