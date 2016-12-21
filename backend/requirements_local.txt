@@ -8,7 +8,3 @@ pkg-resources==0.0.0
 requests==2.12.4
 simplejson==3.10.0
 uritemplate==3.0.0
-
-gunicorn==19.6.0
-whitenoise==3.2.2
-psycopg2==2.5.4

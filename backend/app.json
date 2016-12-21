@@ -1,0 +1,8 @@
+{
+  "name": "Authentication Service @ Heroku",
+  "description": "Authentication Service for class of service engineer @ UA.",
+  "image": "heroku/python",
+  "repository": "https://git.heroku.com/authservice-es-2016.git",
+  "keywords": ["python", "django" ],
+  "addons": [ "heroku-postgresql" ]
+}
