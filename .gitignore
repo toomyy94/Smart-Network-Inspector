@@ -287,6 +287,3 @@ dump*.json
 /static/master/temp
 .idea/
 
-
-# Avatars images
-static/web/avatars/*
