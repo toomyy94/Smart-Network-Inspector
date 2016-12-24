@@ -1,0 +1,8 @@
+{
+  "name": "Smart Network Inspector @ Heroku",
+  "description": "Smart Network Inspector for class of Mobile Network @ UA.",
+  "image": "heroku/python",
+  "repository": "https://git.heroku.com/rm-backend.git",
+  "keywords": ["python", "django" ],
+  "addons": [ "heroku-postgresql" ]
+}
