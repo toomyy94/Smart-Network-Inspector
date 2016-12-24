@@ -3,6 +3,7 @@ package tomasr.ua.pt.networkinspector;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import tomasr.ua.pt.networkinspector.modules.ApplicationController;
 import tomasr.ua.pt.networkinspector.modules.LocationCoord;
 
 /**
@@ -57,22 +59,22 @@ public class HomeFragment extends Fragment {
         ImageView bad_quality_audio = (ImageView) view.findViewById(R.id.bad_quality_audio);
 
         //POST ONCLICK
-        final String URL = "http://192.168.8.217:5011/location/point";
+        final String URL = "https://rm-backend.herokuapp.com/api/backend/info/";
 
         no_coverage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 // Post params to be sent to the server
                 HashMap<String, Object> params = new HashMap<String, Object>();
-                params.put("latitude", gps.getLatitude());
-                params.put("longitude", gps.getLongitude());
+                params.put("lat", gps.getLatitude());
+                params.put("lon", gps.getLongitude());
                 params.put("info", "no_coverage");
 
                 JsonObjectRequest req = new JsonObjectRequest(URL, new JSONObject(params),
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-
+                                Log.i("POST response",""+response);
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -83,6 +85,9 @@ public class HomeFragment extends Fragment {
                 });
                 //Ver se entra aqui!
                 Toast.makeText(getActivity(),"Obrigado pelo seu feedback!", Toast.LENGTH_SHORT).show();
+
+                // add the request object to the queue to be executed
+                ApplicationController.getInstance().addToRequestQueue(req);
             }
         });
 
@@ -91,8 +96,8 @@ public class HomeFragment extends Fragment {
 
                 // Post params to be sent to the server
                 HashMap<String, Object> params = new HashMap<String, Object>();
-                params.put("latitude", gps.getLatitude());
-                params.put("longitude", gps.getLongitude());
+                params.put("lat", gps.getLatitude());
+                params.put("lon", gps.getLongitude());
                 params.put("info", "no_data");
 
                 JsonObjectRequest req = new JsonObjectRequest(URL, new JSONObject(params),
@@ -110,6 +115,9 @@ public class HomeFragment extends Fragment {
                 });
                 //Ver se entra aqui!
                 Toast.makeText(getActivity(),"Obrigado pelo seu feedback!", Toast.LENGTH_SHORT).show();
+
+                // add the request object to the queue to be executed
+                ApplicationController.getInstance().addToRequestQueue(req);
             }
         });
 
@@ -118,8 +126,8 @@ public class HomeFragment extends Fragment {
 
                 // Post params to be sent to the server
                 HashMap<String, Object> params = new HashMap<String, Object>();
-                params.put("latitude", gps.getLatitude());
-                params.put("longitude", gps.getLongitude());
+                params.put("lat", gps.getLatitude());
+                params.put("lon", gps.getLongitude());
                 params.put("info", "slow_data");
 
                 JsonObjectRequest req = new JsonObjectRequest(URL, new JSONObject(params),
@@ -137,6 +145,9 @@ public class HomeFragment extends Fragment {
                 });
                 //Ver se entra aqui!
                 Toast.makeText(getActivity(),"Obrigado pelo seu feedback!", Toast.LENGTH_SHORT).show();
+
+                // add the request object to the queue to be executed
+                ApplicationController.getInstance().addToRequestQueue(req);
             }
         });
 
@@ -145,8 +156,8 @@ public class HomeFragment extends Fragment {
 
                 // Post params to be sent to the server
                 HashMap<String, Object> params = new HashMap<String, Object>();
-                params.put("latitude", gps.getLatitude());
-                params.put("longitude", gps.getLongitude());
+                params.put("lat", gps.getLatitude());
+                params.put("lon", gps.getLongitude());
                 params.put("info", "cannot_call");
 
                 JsonObjectRequest req = new JsonObjectRequest(URL, new JSONObject(params),
@@ -164,6 +175,9 @@ public class HomeFragment extends Fragment {
                 });
                 //Ver se entra aqui!
                 Toast.makeText(getActivity(),"Obrigado pelo seu feedback!", Toast.LENGTH_SHORT).show();
+
+                // add the request object to the queue to be executed
+                ApplicationController.getInstance().addToRequestQueue(req);
             }
         });
 
@@ -172,8 +186,8 @@ public class HomeFragment extends Fragment {
 
                 // Post params to be sent to the server
                 HashMap<String, Object> params = new HashMap<String, Object>();
-                params.put("latitude", gps.getLatitude());
-                params.put("longitude", gps.getLongitude());
+                params.put("lat", gps.getLatitude());
+                params.put("lon", gps.getLongitude());
                 params.put("info", "dropped_call");
 
                 JsonObjectRequest req = new JsonObjectRequest(URL, new JSONObject(params),
@@ -191,6 +205,9 @@ public class HomeFragment extends Fragment {
                 });
                 //Ver se entra aqui!
                 Toast.makeText(getActivity(),"Obrigado pelo seu feedback!", Toast.LENGTH_SHORT).show();
+
+                // add the request object to the queue to be executed
+                ApplicationController.getInstance().addToRequestQueue(req);
             }
         });
 
@@ -199,8 +216,8 @@ public class HomeFragment extends Fragment {
 
                 // Post params to be sent to the server
                 HashMap<String, Object> params = new HashMap<String, Object>();
-                params.put("latitude", gps.getLatitude());
-                params.put("longitude", gps.getLongitude());
+                params.put("lat", gps.getLatitude());
+                params.put("lon", gps.getLongitude());
                 params.put("info", "bad_quality_audio");
 
                 JsonObjectRequest req = new JsonObjectRequest(URL, new JSONObject(params),
@@ -218,6 +235,9 @@ public class HomeFragment extends Fragment {
                 });
                 //Ver se entra aqui!
                 Toast.makeText(getActivity(),"Obrigado pelo seu feedback!", Toast.LENGTH_SHORT).show();
+
+                // add the request object to the queue to be executed
+                ApplicationController.getInstance().addToRequestQueue(req);
             }
         });
 

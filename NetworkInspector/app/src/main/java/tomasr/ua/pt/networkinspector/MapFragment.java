@@ -6,12 +6,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -21,12 +28,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import tomasr.ua.pt.networkinspector.modules.LocationCoord;
 import tomasr.ua.pt.networkinspector.modules.MarkerInfo;
 
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_BLUE;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_GREEN;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_ORANGE;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_ROSE;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_VIOLET;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_YELLOW;
 
 
@@ -66,14 +83,47 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
 
 //      HTTP GET MARKERS
-//        String URL_Get_Markers = "http://192.168.8.217:5011/location/closestPoints?latitude="+gps.getLatitude()+
-//                "&longitude="+gps.getLongitude()+"&points=10&distance=150000";
-//
-//        new GETMarkers().execute(URL_Get_Markers);
-//
-//        for (MarkerInfo tmp:marker_info) {
-//            ids.add(tmp.getID());
-//        }
+        String URL_Get_Markers = "https://rm-backend.herokuapp.com/api/backend/info/all/";
+
+        StringRequest stringRequest = new StringRequest(URL_Get_Markers,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try{
+                            JSONObject object = new JSONObject(response);
+                            JSONArray jArray = object.getJSONArray("results");
+
+                            for (int i=0; i < jArray.length(); i++) {
+
+                                JSONObject oneObject = jArray.getJSONObject(i);
+
+                                // Pulling items from the Objects
+                                Integer id = oneObject.getInt("id");
+                                Double latitude = Double.parseDouble(oneObject.getString("lat"));
+                                Double longitude = Double.parseDouble(oneObject.getString("lon"));
+                                String info = oneObject.getString("info");
+                                String msg_time = oneObject.getString("msg_time");
+
+                                MarkerInfo markerInfo = new MarkerInfo(id,latitude,longitude,info,msg_time);
+                                marker_info.add(markerInfo);
+                            }
+
+                        }catch (JSONException e){
+                                e.printStackTrace();
+                                Log.e("erro","erro no try do JSON");
+                            }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getActivity(),error.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(stringRequest);
 
     }
 
@@ -106,56 +156,46 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             progress_bar.setVisibility(View.VISIBLE);
             progress_text.setVisibility(View.VISIBLE);
             progress_text.setText("Updating Map...");
-            SystemClock.sleep(1200);
+            SystemClock.sleep(1500);
             progress_bar.setVisibility(View.GONE);
             progress_text.setVisibility(View.GONE);
         }
 
-//        for(int i=0; i< marker_info.size(); i+=5) {
-//            addClosestMarker(marker_info[i+2],marker_info[i+3]);
-//        }
+        for(int i=0; i< marker_info.size(); i++) {
+            addMarker(marker_info.get(i).getLat(), marker_info.get(i).getLon(), marker_info.get(i).getInfo());
+        }
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gps.getLatitude(), gps.getLongitude()), 8));
     }
 
-    public void addMarker() {
+
+    public void addMarker(Double lat, Double lon, String info) {
+        float cor = HUE_YELLOW;
+        switch (info){
+            case "no_coverage":
+                cor = HUE_ROSE;
+                break;
+            case "bad_quality_audio":
+                cor = HUE_VIOLET;
+                break;
+            case "no_data":
+                cor = HUE_ORANGE;
+                break;
+            case "dropped_call":
+                cor = HUE_BLUE;
+                break;
+            case "slow_data":
+                cor = HUE_GREEN;
+                break;
+            case "cannot_call":
+                cor = HUE_MAGENTA;
+                break;
+        }
 
         mMarkers.add(mMap.addMarker(new MarkerOptions().position(
-                new LatLng((gps.getLatitude()), gps.getLongitude())).
-                title("").icon(BitmapDescriptorFactory.
-                defaultMarker(HUE_YELLOW))));
-    }
-
-    public void addClosestMarker(Double chat_lat, Double chat_lon) {
-        float cor = HUE_YELLOW;
-//        switch (event_type){
-//            case "Music festival":
-//                cor = HUE_ROSE;
-//                break;
-//            case "Local show":
-//                cor = HUE_VIOLET;
-//                break;
-//            case "Street market":
-//                cor = HUE_ORANGE;
-//                break;
-//            case "Building Reunion":
-//                cor = HUE_BLUE;
-//                break;
-//            case "School/University":
-//                cor = HUE_GREEN;
-//                break;
-//            case "Sport related":
-//                cor = HUE_MAGENTA;
-//                break;
-//            case "Other":
-//                cor = HUE_YELLOW;
-//                break;
-//        }
-
-//        mMarkers.add(mMap.addMarker(new MarkerOptions().position(
-//                new LatLng(chat_lat, chat_lon)).
-//                title("Este chat está demasiado longe").snippet("Este chat está demasiado longe").icon(BitmapDescriptorFactory.
-//                defaultMarker(cor))));
+                new LatLng(lat, lon)).
+                title(""+info).icon(BitmapDescriptorFactory.
+                defaultMarker(cor))));
     }
 
     public double distFrom(float lat1, float lng1, float lat2, float lng2) {

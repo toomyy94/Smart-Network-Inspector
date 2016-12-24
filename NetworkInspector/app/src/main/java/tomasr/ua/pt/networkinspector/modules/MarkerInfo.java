@@ -9,14 +9,16 @@ public class MarkerInfo {
     private Double lat;
     private Double lon;
     private String info;
+    private String msg_time;
 
 
-    public MarkerInfo(Integer id, Double lat, Double lon, String info) {
+    public MarkerInfo(Integer id, Double lat, Double lon, String info, String msg_time) {
         super();
         this.id = id;
         this.lat = lat;
         this.lon = lon;
         this.info = info;
+        this.msg_time = msg_time;
     }
 
     public Integer getID() {
@@ -31,6 +33,9 @@ public class MarkerInfo {
     public String getInfo() {
         return info;
     }
+    public String getMsg_time() {
+        return msg_time;
+    }
 
     public void setId(Integer id){
         this.id=id;
@@ -43,6 +48,9 @@ public class MarkerInfo {
     }
     public void setInfo(String info){
         this.info=info;
+    }
+    public void setMsg_time(String msg_time){
+        this.msg_time=msg_time;
     }
 
 }
