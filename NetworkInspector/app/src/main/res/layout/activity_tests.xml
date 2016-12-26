@@ -10,4 +10,112 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="tomasr.ua.pt.networkinspector.TestsActivity">
 
+    <TextView
+        android:text="Test Me Now Mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textView"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="normal|bold" />
+
+    <Button
+        android:text="Test Me Now"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/test_all"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:background="@android:color/holo_red_dark" />
+
+    <TextView
+        android:text="Ping"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:id="@+id/ic"
+        android:textSize="24sp"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ictest"
+        android:layout_alignRight="@+id/ic"
+        android:layout_alignBaseline="@id/ic"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Downlink Data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:id="@+id/dd"
+        android:textSize="24sp"
+        android:layout_below="@+id/ic"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ddtest"
+        android:layout_alignRight="@+id/dd"
+        android:layout_alignBaseline="@id/dd"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Uplink Data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:id="@+id/ud"
+        android:textSize="24sp"
+        android:layout_below="@+id/dd"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/udtest"
+        android:layout_alignRight="@+id/ud"
+        android:layout_alignBaseline="@id/ud"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:id="@+id/voice"
+        android:textSize="24sp"
+        android:layout_below="@+id/ud"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/voicetest"
+        android:layout_alignRight="@+id/voice"
+        android:layout_alignBaseline="@id/voice"
+        android:layout_alignParentEnd="true" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar4"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress_bar"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
