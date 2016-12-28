@@ -12,13 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,10 +21,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,49 +72,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//      HTTP GET MARKERS
-        String URL_Get_Markers = "https://rm-backend.herokuapp.com/api/backend/info/all/";
-
-        StringRequest stringRequest = new StringRequest(URL_Get_Markers,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        try{
-                            JSONObject object = new JSONObject(response);
-                            JSONArray jArray = object.getJSONArray("results");
-
-                            for (int i=0; i < jArray.length(); i++) {
-
-                                JSONObject oneObject = jArray.getJSONObject(i);
-
-                                // Pulling items from the Objects
-                                Integer id = oneObject.getInt("id");
-                                Double latitude = Double.parseDouble(oneObject.getString("lat"));
-                                Double longitude = Double.parseDouble(oneObject.getString("lon"));
-                                String info = oneObject.getString("info");
-                                String msg_time = oneObject.getString("msg_time");
-
-                                MarkerInfo markerInfo = new MarkerInfo(id,latitude,longitude,info,msg_time);
-                                marker_info.add(markerInfo);
-                            }
-
-                        }catch (JSONException e){
-                                e.printStackTrace();
-                                Log.e("erro","erro no try do JSON");
-                            }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(),error.getMessage(),Toast.LENGTH_LONG).show();
-                    }
-                });
-
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(stringRequest);
-
     }
 
     @Override
@@ -160,6 +107,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             progress_bar.setVisibility(View.GONE);
             progress_text.setVisibility(View.GONE);
         }
+
+        Log.i("marker_info",""+marker_info.get(0).getInfo());
 
         for(int i=0; i< marker_info.size(); i++) {
             addMarker(marker_info.get(i).getLat(), marker_info.get(i).getLon(), marker_info.get(i).getInfo());

@@ -10,6 +10,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,23 +96,27 @@ public class NetworkInfoFragment extends Fragment {
         ArrayList<String> lte_info = new ArrayList<String>();
 
         TelephonyManager tm = (TelephonyManager)getActivity().getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+        Log.i("all_lte_info",""+tm.getAllCellInfo().toString());
+        if(tm.getAllCellInfo().toString().contains("CellIdentityLte")) {
+            String[] s_tac = tm.getAllCellInfo().toString().split("mTac=");
+            Log.i("s_tac", "" + s_tac);
+            tac = s_tac[1].substring(0, 5);
 
-        String[] s_tac = tm.getAllCellInfo().toString().split("mTac=");
-        tac = s_tac[1].substring(0,5);
+            String[] s_rsrp = tm.getAllCellInfo().toString().split("rsrp=");
+            rsrp = s_rsrp[1].substring(0, 4);
 
-        String[] s_rsrp = tm.getAllCellInfo().toString().split("rsrp=");
-        rsrp = s_rsrp[1].substring(0,4);
+            String[] s_rsrq = tm.getAllCellInfo().toString().split("rsrq=");
+            rsrq = s_rsrq[1].substring(0, 3);
 
-        String[] s_rsrq = tm.getAllCellInfo().toString().split("rsrq=");
-        rsrq = s_rsrq[1].substring(0,3);
+            String[] s_cellID = tm.getAllCellInfo().toString().split("mPci=");
+            mPci = s_cellID[1].substring(0, 1);
 
-        String[] s_cellID = tm.getAllCellInfo().toString().split("mPci=");
-        mPci = s_cellID[1].substring(0,1);
-
-        lte_info.add("Cell ID: "+mPci);
-        lte_info.add("Rsrp: "+rsrp+"dBm");
-        lte_info.add("RSRQ: "+rsrq+"dBm");
-        lte_info.add("LAC / TAC: "+tac);
+            lte_info.add("Cell ID: " + mPci);
+            lte_info.add("Rsrp: " + rsrp + "dBm");
+            lte_info.add("RSRQ: " + rsrq + "dBm");
+            lte_info.add("LAC / TAC: " + tac);
+        }
+        else lte_info.add("No LTE Connectivity");
 
         return lte_info;
     }

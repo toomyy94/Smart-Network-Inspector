@@ -15,6 +15,10 @@
             android:icon="@drawable/world_map_4"
             android:title="Info Map" />
         <item
+            android:id="@+id/nav_monitoring"
+            android:icon="@drawable/evol"
+            android:title="Monitoring QoE" />
+        <item
             android:id="@+id/nav_tests"
             android:icon="@drawable/ic_menu_manage"
             android:title="Test Network" />

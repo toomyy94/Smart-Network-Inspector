@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -19,10 +21,27 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import tomasr.ua.pt.networkinspector.modules.LocationCoord;
+import tomasr.ua.pt.networkinspector.modules.MarkerInfo;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,6 +51,15 @@ public class MainActivity extends AppCompatActivity
     private Toolbar toolbar = null;
     private LocationCoord gps = null;
     private static final int PERMISSION_REQUEST_CODE = 1;
+
+    //Gets
+    List<MarkerInfo> marker_info = new ArrayList<MarkerInfo>();
+
+    //Graph
+    List<String> hora = new ArrayList<String>();
+    List<String> info = new ArrayList<String>();
+    List<String> hora_slow_data = new ArrayList<String>();
+    List<String> info_slow_data = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +104,11 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception ex) {
         }
 
+        gps = new LocationCoord(this);
+
+        //GET in TIMER
+        callAsynchronousTask();
+
         if (!gps_enabled && !network_enabled) {
             // notify user
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -100,11 +133,35 @@ public class MainActivity extends AppCompatActivity
             dialog.show();
         }
 
-        gps = new LocationCoord(this);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+    public void callAsynchronousTask(){
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+
+                            PerformBackgroundTask performBackgroundTask = new PerformBackgroundTask();
+                            // PerformBackgroundTask this class is the class that extends AsynchTask
+                            performBackgroundTask.execute();
+
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(doAsynchronousTask, 0, 10000); //execute in every 50000 ms
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -163,6 +220,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
+            Log.i("home","home");
 
             HomeFragment fragment = new HomeFragment(gps);
             FragmentTransaction fragmentTransaction =
@@ -171,6 +229,7 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_network_info) {
+            Log.i("nav_network_info","nav_network_info");
 
             NetworkInfoFragment fragment = new NetworkInfoFragment(gps);
             FragmentTransaction fragmentTransaction =
@@ -179,8 +238,17 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_map) {
+            Log.i("map","map");
 
-            MapFragment fragment = new MapFragment(gps);
+            MapFragment fragment = new MapFragment(gps, marker_info);
+            FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
+
+        }else if (id == R.id.nav_monitoring) {
+
+            MonitoringFragment fragment = new MonitoringFragment(hora, info, hora_slow_data, info_slow_data);
             FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
@@ -212,6 +280,82 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private class PerformBackgroundTask extends AsyncTask<String, Void, List<MarkerInfo>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected List<MarkerInfo> doInBackground(String... urls) {
+
+            //      HTTP GET MARKERS
+            String URL_Get_Markers = "https://rm-backend.herokuapp.com/api/backend/info/all/";
+            marker_info.clear();
+
+            StringRequest stringRequest = new StringRequest(URL_Get_Markers,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+
+                            try{
+                                JSONObject object = new JSONObject(response);
+                                JSONArray jArray = object.getJSONArray("results");
+
+
+                                for (int i=0; i < jArray.length(); i++) {
+
+                                    JSONObject oneObject = jArray.getJSONObject(i);
+
+                                    // Pulling items from the Objects
+                                    Integer id = oneObject.getInt("id");
+                                    Double latitude = Double.parseDouble(oneObject.getString("lat"));
+                                    Double longitude = Double.parseDouble(oneObject.getString("lon"));
+                                    String info = oneObject.getString("info");
+                                    String msg_time = oneObject.getString("msg_time");
+
+                                    MarkerInfo markerInfo = new MarkerInfo(id,latitude,longitude,info,msg_time);
+                                    marker_info.add(markerInfo);
+                                }
+
+                                for (int i=0; i < jArray.length(); i++) {
+                                    //array de horas dos slow_datas
+                                    if(marker_info.get(i).getInfo().equals("slow_data")){
+                                        info_slow_data.add(marker_info.get(i).getInfo());
+                                        hora_slow_data.add(marker_info.get(i).getMsg_time());
+                                    }
+                                    //array de infos e horas completos
+                                    info.add(marker_info.get(i).getInfo());
+                                    hora.add(marker_info.get(i).getMsg_time());
+                                }
+
+                            }catch (JSONException e){
+                                e.printStackTrace();
+                                Log.e("erro","erro no try do JSON");
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("erro","erro no get");
+                        }
+                    });
+
+            RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
+            requestQueue.add(stringRequest);
+
+            return marker_info;
+        }
+
+        protected void onPostExecute(Boolean result) {
+
+        }
+
     }
 
     private boolean checkPermission(){
