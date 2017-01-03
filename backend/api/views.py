@@ -7,11 +7,17 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from core.models import InfoStorage
+# from serializers import InfoStorageSerializer
+# from rest_framework import generics
+# from django.core import serializers
+# from django.forms.models import model_to_dict
+
+# import json
 
 
 class InfoViewer(APIView):
     # permission_classes = (IsAuthenticated,)
-    allowed_methods = ['GET']
+    allowed_methods = ['GET', 'DELETE']
 
     def get(self, request, pk=None):
         """
@@ -45,6 +51,56 @@ class InfoViewer(APIView):
         except:
             pass
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': 'Bad request.'})
+
+    def delete(self, request, pk=None):
+        try:
+            if pk is not None:
+                int_id = int(pk)
+                try:
+                    info = InfoStorage.objects.get(pk=int_id)
+                    info.delete()
+                except:
+                    return Response(status=status.HTTP_404_NOT_FOUND, data={'detail': 'Info not found.'})
+                return Response(status=status.HTTP_200_OK, data={'detail': 'Deleted with success.'})
+        except:
+            pass
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': 'Bad request.'})
+
+
+# class InfoViewerAll(APIView):
+#     # permission_classes = (IsAuthenticated,)
+#     queryset = InfoStorage.objects.all()
+#     serializer_class = InfoStorageSerializer
+#     allowed_methods = ['GET']
+#
+#     def get(self, request):
+#         """
+#         Get all storage data
+#
+#         <h3>Details</h3>
+#
+#         <b>METHODS:</b>
+#             - GET
+#
+#         <b>RETURNS:</b>
+#             - 200 OK
+#             - 404 NOT FOUND
+#             - 400 BAD REQUEST
+#         """
+#         try:
+#             res = {}
+#             info = InfoStorage.objects.all()
+#             print self.serializer_class
+#
+#             # info = serializers.serialize('json', InfoStorage.objects.all())
+#             # data = json.dumps(info)
+#             # dict_obj = model_to_dict(self.queryset)
+#             # serialized = json.dumps(dict_obj)
+#             # result = [storage for storage in InfoStorage.objects.all()]
+#             return Response(status=status.HTTP_200_OK, data=res)
+#         except:
+#             pass
+#         return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': 'Bad request.'})
 
 
 class InfoAdd(APIView):

@@ -1,0 +1,38 @@
+
+{% extends "core/index.html" %}
+{% block head_title %}Entries Details{% endblock %}
+{% block page-header %}Entries History{% endblock %}
+{% block content %}
+<div class="col-lg-6 col-md-5 col-xs-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">Chart</div>
+    <div class="panel-body">
+      <div id="history-chart-data"></div>
+    </div>
+  </div>
+</div>{% endblock %}
+{% block extra_body %}
+<script type="text/javascript">
+  $(function () {
+  
+    var data_from_django = "{{ entries_history | safe }}";
+    data_from_django = data_from_django.replace(/'/g, '"');
+    //console.log(data_from_django);
+    var data = JSON.parse(data_from_django);
+    //console.log(data);
+  
+    if (data.length == 0) {
+      console.log("No data");
+    } else {
+      Morris.Bar({
+        element: 'history-chart-data',
+        data: data,
+        xkey: 'y',
+        ykeys: ['a'],
+        labels: ['Entries'],
+        hideHover: 'auto',
+        resize: true
+      });
+    }
+  });
+</script>{% endblock %}

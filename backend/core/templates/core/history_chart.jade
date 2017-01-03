@@ -1,0 +1,39 @@
+| {% extends "core/index.html" %}
+
+| {% block head_title %}Entries Details{% endblock %}
+
+| {% block page-header %}Entries History{% endblock %}
+
+| {% block content %}
+.col-lg-6.col-md-5.col-xs-12
+  .panel.panel-default
+    .panel-heading Chart
+    .panel-body
+      div#history-chart-data
+| {% endblock %}
+
+| {% block extra_body %}
+script(type="text/javascript").
+  $(function () {
+
+    var data_from_django = "{{ entries_history | safe }}";
+    data_from_django = data_from_django.replace(/'/g, '"');
+    //console.log(data_from_django);
+    var data = JSON.parse(data_from_django);
+    //console.log(data);
+
+    if (data.length == 0) {
+      console.log("No data");
+    } else {
+      Morris.Bar({
+        element: 'history-chart-data',
+        data: data,
+        xkey: 'y',
+        ykeys: ['a'],
+        labels: ['Entries'],
+        hideHover: 'auto',
+        resize: true
+      });
+    }
+  });
+| {% endblock %}
