@@ -1,0 +1,31 @@
+| {% extends "core/index.html" %}
+
+| {% block head_title %}Entries Details{% endblock %}
+
+| {% block page-header %}Entries Details{% endblock %}
+
+| {% block content %}
+.col-md-12
+  .panel.panel-default
+    .panel-heading Existing Data
+    .panel-body
+      .table-responsive
+        table.table
+          thead
+            tr
+              th #
+              th Latitude
+              th Longitude
+              th Info
+              th Time
+          tbody
+            | {% for item in list_entries %}
+            tr
+              td {{item.pk}}
+              td {{item.lat}}
+              td {{item.lon}}
+              td {{item.info}}
+              td {{item.msg_time}}
+            | {% endfor %}
+
+| {% endblock %}
