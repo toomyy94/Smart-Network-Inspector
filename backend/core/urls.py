@@ -1,5 +1,5 @@
 from django.conf.urls import include, url
-from views import index, about, list_entries, entries_history
+from views import index, about, list_entries, entries_history, google_url_validation
 
 
 urlpatterns = [
@@ -12,4 +12,6 @@ urlpatterns = [
     # ex: /entries/history/
     url(r'^entries/history/$', entries_history, name='entries_history'),
 
+    # google url validation
+    url(r'^googleff1931c407ddd6d6.html', google_url_validation),
 ]
