@@ -1,4 +1,5 @@
 | {% load staticfiles %}
+| {% load leaflet_tags %}
 doctype html
 html(lang="en")
   head
@@ -33,6 +34,10 @@ html(lang="en")
     script(src="{% static 'web/morrisjs/morris.min.js' %}", type="text/javascript")
     // Custom Theme JavaScript
     script(src="{% static 'web/dist/js/sb-admin-2.js' %}", type="text/javascript")
+
+    // Leaflet dependencies
+    | {% leaflet_js %}
+    | {% leaflet_css %}
   body
     | {% block body %}
     div#wrapper
@@ -132,8 +137,28 @@ html(lang="en")
                   span.pull-right
                     i.fa.fa-arrow-circle-o-right
                   .clearfix
+          .col-lg-9.col-md-6.col-xs-12
+            .panel.panel-default
+              .panel-heading Map
+              .panel-body
+                | {% leaflet_map "my_map" %}
         | {% endblock %}
     | {% endblock %}
 
+
     | {% block extra_body %}
+    script(type="text/javascript").
+      window.addEventListener("map:init", function (e) {
+        var detail = e.detail;
+        //TODO por as coordenadas da DB
+        var data_from_django = "{{ markers | safe }}";
+        data_from_django = data_from_django.replace(/'/g, '"');
+        data_from_django = data_from_django.replace(/u/g, '');
+        console.log(data_from_django);
+        var data = JSON.parse(data_from_django);
+
+        for (var k in data) {
+          L.marker([data[k].lat, data[k].lon]).addTo(detail.map);
+        }
+      }, false);
     | {% endblock %}

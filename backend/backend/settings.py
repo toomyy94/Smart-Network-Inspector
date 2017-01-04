@@ -45,9 +45,14 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'whitenoise.runserver_nostatic',
 
+    # rest framework
     'rest_framework_swagger',
     'rest_framework.authtoken',
 
+    # Maps
+    'leaflet',
+
+    # My Apps
     'core',
     'api',
 ]
@@ -184,6 +189,19 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
     )
+}
+
+
+# Leaflet settings
+LEAFLET_CONFIG = {
+    # 'SPATIAL_EXTENT': (5.0, 44.0, 7.5, 46),  # limit map vision to a specific coords
+    'DEFAULT_CENTER': (40.6344678, -8.6500188),
+    'DEFAULT_ZOOM': 8,
+    'MIN_ZOOM': 3,
+    'MAX_ZOOM': 18,
+    'SCALE': 'metric',  # both, metric, imperial
+    'MINIMAP': False,
+
 }
 
 

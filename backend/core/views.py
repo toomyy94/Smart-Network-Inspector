@@ -15,9 +15,16 @@ def index(request):
     except:
         num_entries = 'No entries'
 
+    try:
+        all_obj = InfoStorage.objects.all()
+        lst = [{'lat': l.lat, 'lon': l.lon} for l in all_obj]
+    except:
+        lst = []
+
     template = loader.get_template('core/index.html')
     context = RequestContext(request, {
         'num_entries': num_entries,
+        'markers': lst,
     })
     return HttpResponse(template.render(context))
 
@@ -68,3 +75,7 @@ def entries_history(request):
         'entries_history': lst,
     })
     return HttpResponse(template.render(context))
+
+
+def google_url_validation(request):
+    return render_to_response("core/googleff1931c407ddd6d6.html", RequestContext(request))
